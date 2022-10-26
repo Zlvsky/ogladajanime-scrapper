@@ -1,13 +1,17 @@
-const puppeteer = require("puppeteer-extra");
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-puppeteer.use(StealthPlugin());
+const puppeteer = require("puppeteer");
+const path = require("path");
+const prompt = require("prompt-sync")();
 
-const ogladajAnimePage = "https://ogladajanime.pl/anime/death-parade";
+const Downloader = require("./Downloader");
+
+const ogladajAnimePage = prompt("Paste ogladajanime anime page: ");
+
+
+const filepath = path.resolve(__dirname, "videos");
 
 puppeteer
   .launch({
     headless: false,
-    executablePath: "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     args: [
       "--no-sandbox",
       "--disable-web-security",
@@ -21,17 +25,22 @@ puppeteer
 
     const checkIfModalPopup = async () => {
       await page.waitForTimeout(4000);
-      const modalPopup = await page.evaluate(
-        () =>
-          window.getComputedStyle(document.querySelector(".bootbox")).display
-      );
-      if (modalPopup === "block") {
-        const popupButton = await page.$(".btn-warning.bootbox-cancel");
-        popupButton.click();
-        await page.waitForTimeout(2000);
-        const popupButton2 = await page.$(".btn-success.bootbox-accept");
-        popupButton2.click();
-        await page.waitForTimeout(2000);
+      const exists = await page.$eval(".bootbox", () => true).catch(() => false);
+      // check if popup exist in DOM
+      // if exist close it
+      if(exists) {
+        const modalPopup = await page.evaluate(
+          () =>
+            window.getComputedStyle(document.querySelector(".bootbox")).display
+        );
+        if (modalPopup === "block") {
+          const popupButton = await page.$(".btn-warning.bootbox-cancel");
+          popupButton.click();
+          await page.waitForTimeout(2000);
+          const popupButton2 = await page.$(".btn-success.bootbox-accept");
+          popupButton2.click();
+          await page.waitForTimeout(2000);
+        }
       }
     };
 
@@ -67,28 +76,20 @@ puppeteer
           .parentElement.querySelector("button")
           .click();
       });
-      // Array.from(playerTable)
-      //   .find((el) => el.innerText === "cda")
-      //   .parentElement.querySelector("button")
-      //   .click();
     };
 
-    const getVideoLink = async () => {
+    const downloadVideo = async (index) => {
       await page.waitForTimeout(2000);
       const videoSource = await page.evaluate(
         () =>
-          // document.querySelector(".pb-fl-player-wrap > video").src
           document
             .querySelector("iframe")
             .contentWindow.document.querySelector("video").src
       );
-      console.log(videoSource)
-    //   const videoSource = await page.evaluate(() =>
-    //     document.querySelector(".pb-fl-player-wrap video").src
-    //   );
-
-    //   const videoElement = await page.$(".pb-fl-player-wrap > video");
-    //   const videoSource = videoElement.src;
+      Downloader.download(videoSource, filepath, `${index}.mp4`, () => {
+        console.log("Download complete for " + filename);
+      });
+      console.log(videoSource);
     };
 
     const getVideoLinks = async (animeLink) => {
@@ -98,14 +99,8 @@ puppeteer
         await page.goto(episodesLinks[i], { waitUntill: "domcontentloaded" });
         await loadCDAiFrame();
         await page.waitForTimeout(4000);
-        await getVideoLink();
+        await downloadVideo(i);
       }
-      // episodesLinks.forEach(async (el) => {
-      //     console.log(el)
-      //   await app.page.goto(el, { waitUntill: "domcontentloaded" });
-      //   await app.loadCDAiFrame();
-      //   await app.getVideoLink();
-      // });
     };
 
     await getVideoLinks(ogladajAnimePage);

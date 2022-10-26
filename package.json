@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "path": "^0.12.7",
+    "prompt-sync": "^4.2.0",
     "puppeteer": "^19.1.0",
-    "puppeteer-extra": "^3.3.4",
-    "puppeteer-extra-plugin-stealth": "^2.11.1"
+    "url": "^0.11.0"
   }
 }
