@@ -24,6 +24,8 @@
 2.Copy and paste link in command prompt to ogladajanime anime episodes: example - https://ogladajanime.pl/anime/death-note/episodes
 <br />
 3.Wait to download all episodes and enjoy:)
+<br />
+<img src="https://user-images.githubusercontent.com/45123514/198293969-29649e31-79dd-45af-8f09-f96563c21981.gif" alt="" />
 
 <br/>
 
