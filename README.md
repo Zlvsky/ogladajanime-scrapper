@@ -25,7 +25,7 @@
 <br />
 3.Wait to download all episodes and enjoy:)
 <br />
-<img src="https://user-images.githubusercontent.com/45123514/198293969-29649e31-79dd-45af-8f09-f96563c21981.gif" alt="" />
+<img src="https://user-images.githubusercontent.com/45123514/198294627-06ff00b8-a561-458f-9474-28e93172a438.gif" alt="" />
 
 <br/>
 
