@@ -34,11 +34,17 @@ puppeteer
             window.getComputedStyle(document.querySelector(".bootbox")).display
         );
         if (modalPopup === "block") {
-          const popupButton = await page.$(".btn-warning.bootbox-cancel");
-          popupButton.click();
+          const popup1Exist = await page.$eval(".btn-warning.bootbox-cancel", () => true).catch(() => false);
+          if(popup1Exist) {
+            const popupButton = await page.$(".btn-warning.bootbox-cancel");
+            popupButton.click();
+          }
           await page.waitForTimeout(2000);
-          const popupButton2 = await page.$(".btn-success.bootbox-accept");
-          popupButton2.click();
+          const popup2Exist = await page.$eval(".btn-success.bootbox-accept", () => true).catch(() => false);
+          if(popup2Exist) {
+            const popupButton2 = await page.$(".btn-success.bootbox-accept");
+            popupButton2.click();
+          }
           await page.waitForTimeout(2000);
         }
       }
